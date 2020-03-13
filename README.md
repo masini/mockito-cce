@@ -1,30 +1,30 @@
 # mockito-cce project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project demostrate an Exception using Mockito with Quarkus 1.3.0.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
-
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
+To replicate run:
 ```
-./mvnw quarkus:dev
+./mvnw test
 ```
 
-## Packaging and running the application
+you will get:
 
-The application is packageable using `./mvnw package`.
-It produces the executable `mockito-cce-1.0.0-SNAPSHOT-runner.jar` file in `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
+```
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.177 s <<< FAILURE! - in net.lucamasini.testcase.ExampleResourceTest
+[ERROR] testHelloEndpoint  Time elapsed: 0.677 s  <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
 
-The application is now runnable using `java -jar target/mockito-cce-1.0.0-SNAPSHOT-runner.jar`.
+ClassCastException occurred while creating the mockito mock :
+  class to mock : 'javax.servlet.http.HttpServletRequest', loaded by classloader : 'jdk.internal.loader.ClassLoaders$AppClassLoader@6ff3c5b5'
+  created class : 'org.mockito.codegen.HttpServletRequest$MockitoMock$188783148', loaded by classloader : 'net.bytebuddy.dynamic.loading.MultipleParentClassLoader@510689af'
+  proxy instance class : 'org.mockito.codegen.HttpServletRequest$MockitoMock$188783148', loaded by classloader : 'net.bytebuddy.dynamic.loading.MultipleParentClassLoader@510689af'
+  instance creation by : ObjenesisInstantiator
 
-## Creating a native executable
+You might experience classloading issues, please ask the mockito mailing-list.
 
-You can create a native executable using: `./mvnw package -Pnative`.
+	at net.lucamasini.testcase.ExampleResourceTest.testHelloEndpoint(ExampleResourceTest.java:18)
+Caused by: java.lang.ClassCastException: class org.mockito.codegen.HttpServletRequest$MockitoMock$188783148 cannot be cast to class org.mockito.internal.creation.bytebuddy.MockAccess (org.mockito.codegen.HttpServletRequest$MockitoMock$188783148 is in unnamed module of loader net.bytebuddy.dynamic.loading.MultipleParentClassLoader @510689af; org.mockito.internal.creation.bytebuddy.MockAccess is in unnamed module of loader io.quarkus.bootstrap.classloading.QuarkusClassLoader @65f095f8)
+	at net.lucamasini.testcase.ExampleResourceTest.testHelloEndpoint(ExampleResourceTest.java:18)
 
-Or you can use Docker to build the native executable using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
-
-You can then execute your binary: `./target/mockito-cce-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image-guide .
+2020-03-13 16:53:28,727 INFO  [io.quarkus] (main) Quarkus stopped in 0.024s
+```
